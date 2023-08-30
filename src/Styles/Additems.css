@@ -1,0 +1,30 @@
+.flex-container-1 {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    
+}
+
+.flex-container-1 > div {
+  margin: 5px;
+  text-align: center;
+  line-height: 75px;
+}
+
+
+.formItems {
+    width: 150%;
+}
+
+
+.itemsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.itemsContainer > div {
+    
+    margin: 10px;
+    text-align: center;
+  }

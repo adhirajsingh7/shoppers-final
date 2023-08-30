@@ -1,0 +1,31 @@
+.main-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.sub-1 {
+    display: flex;
+    justify-content: left;
+    width: 50%;
+}
+
+.sub-2 {
+    display: flex;
+    justify-content: right;
+    margin-right: 300px;
+    width: 50%;
+    /* height: 100%; */
+}
+
+.treeimagecontainer {
+    /* height: 400px;
+    width: 100%; */
+    /* object-fit: contain; */
+
+    float:left;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+
+}

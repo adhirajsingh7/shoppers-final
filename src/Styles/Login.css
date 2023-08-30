@@ -1,0 +1,27 @@
+.flex-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 250px;
+    
+}
+
+.flex-container > div {
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+}
+
+
+.ImageContainer {
+    justify-content: left;
+    width: 500px;
+    height: 500px;
+}
+.loginImage {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.formItems {
+    width: 100%;
+}
