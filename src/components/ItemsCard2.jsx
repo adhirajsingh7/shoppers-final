@@ -5,9 +5,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions } from '@mui/material';
+import { Button, CardActions } from '@mui/material';
 
-const ItemsCard2 = ({cart, handleDelete}) => {
+const ItemsCard2 = ({item, handleDelete}) => {
   return (
     <>
 
@@ -20,19 +20,19 @@ const ItemsCard2 = ({cart, handleDelete}) => {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {cart.title}
+          {item.title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {cart.description}
+          {item.description}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Price {"$"}
-          {cart.price}
+          {item.price}
         </Typography>
       </CardContent>
       <CardActions>
         
-        <Button  size="small">
+        <Button  size="small" onClick={()=>handleDelete(item.id)}>
           Delete
         </Button>
       </CardActions>

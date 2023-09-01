@@ -2,10 +2,8 @@ import { Button, Checkbox, FormControlLabel, TextField, Typography } from "@mui/
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../Styles/Login.css";
-import loginImage from '../assets/LoginImage.jpg'
 
-const Login = (userData) => {
-  // const validUser = JSON.parse(localStorage.getItem(`${userData.email}`))
+const Login = () => {
 
   const navigate = useNavigate()
 
@@ -33,43 +31,39 @@ const Login = (userData) => {
 
   const validUser = JSON.parse(localStorage.getItem(`${loginUser.email}`));
 
-  const handleStorage = () => {
-    console.log(validUser);
-    // console.log(loginUser);
-  };
 
   return (
     <>
-    
-    
-
-      <div className="flex-container">
+      <div className="login-main-container">
       
-      <div className="ImageContainer">
-          <img className="loginImage" src={loginImage} alt="" />
+      <div className="login-sub-1">
+
         </div>
         
-        <div>
-          <form className="LoginForm">
+        <div className="login-sub-2">
+          <Typography variant="h2">Login page</Typography>
+          <form >
             <div >
-            <TextField  className="formItems"
+            <TextField  className="textfield"
               variant="outlined"
               label="Email"
               type="email"
               name="email"
               onChange={handleChange}
               value={loginUser.email}
+              sx={{mb : 3, mt: 3}}
             />
             </div>
             
             <div>
-            <TextField className="formItems"
+            <TextField className="textfield"
               variant="outlined"
               label="Password"
               type="password"
               name="password"
               onChange={handleChange}
               value={loginUser.password}
+              sx={{mb : 3}}
             />
             </div>
             
@@ -77,11 +71,12 @@ const Login = (userData) => {
             <FormControlLabel 
               control={<Checkbox name="remember-me" id="remember-me" />}
               label="remember-me"
+              sx={{mb : 3}}
             />
             </div>
 
             <div>
-            <Button className="formItems" type="submit" variant="contained" onClick={handleSubmit}>
+            <Button color="error" type="submit" variant="contained" onClick={handleSubmit} sx={{mb : 3}}>
               Submit
             </Button>
             </div>
@@ -89,13 +84,11 @@ const Login = (userData) => {
             <div>
               <Typography >
               Dont have an account? <Link to="/signup">Sign-up</Link>
-              </Typography>
-         
-        </div>
-        <div>
-          <Button variant="outlined" onClick={handleStorage}>btn storage</Button>
-        </div>
+              </Typography >
+          </div>
+
           </form>
+
         </div>
 
       </div>

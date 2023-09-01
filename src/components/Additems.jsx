@@ -1,101 +1,116 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ItemsCard from "./ItemsCard";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Button, FormControl, TextField, Typography } from "@mui/material";
+import { v4 as uuidv4 } from 'uuid';
 
 import "../Styles/Additems.css";
 
 const Additems = ({ loggedUser }) => {
 
-  //Displaying array
-  // const getUser = localStorage.getItem(`${loggedUser.email}`)
-  const [cart, setCart] = useState(loggedUser.cartItems);
 
-  //Add item to Displaying array
-  const [newCart, setNewCart] = useState({
+  //ItemsList
+  const [items, setItems] = useState(
+    JSON.parse(localStorage.getItem("ItemsList"))
+  );
+
+  //Handling changes to LocalStorage
+  useEffect(() => {
+    localStorage.setItem("ItemsList", JSON.stringify(items));
+  }, [items]);
+
+  //Cart Items
+
+  const userCart = loggedUser.cartItems;
+  const [cartItems, setCartItems] = useState(userCart);
+
+
+  const handleAddtoCart = (item) => {
+
+
+    if (cartItems)
+    {
+      setCartItems([...cartItems, item]);
+    } 
+    else {
+      setCartItems(item);
+    }
+  };
+
+  useEffect(() => {
+    const UpdatedUser = { ...loggedUser, cartItems: cartItems };
+    localStorage.setItem(`${loggedUser.email}`, JSON.stringify(UpdatedUser));
+  }, [cartItems]);
+
+  //Add item to Displaying ItemsList
+  const [newItem, setNewItem] = useState({
+    id: uuidv4().slice(0,8),
     title: "",
     description: "",
     price: "",
+    quantity : 1
   });
 
-  const [UpdatedUser, setUpdatedUser] = useState(loggedUser);
-
-
-  const [addtocart, setAddtocart] = useState([]);
-
-
-  // Handling Form Submission
+  // Handling Form Changes
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setNewCart({ ...newCart, [name]: value });
+    setNewItem({ ...newItem, [name]: value });
   };
+
+
+  const [errors, setErrors] = useState({})
 
   const handleSubmit = (e) => {
 
     e.preventDefault();
 
-    setCart([...cart, newCart]);
+    const {title ,description ,price} = newItem;
 
-    // const cartItems = testcart.carItems;
-    // setTestCart({ ...testcart, cartItems: [...cart, newCart] });
+    const validationError = {}
 
-    setUpdatedUser({...UpdatedUser, cartItems : [...cart ,newCart] })
+    if(!title.trim()){
+      validationError.title = "Title is required"
+    } 
+    if(!description.trim()){
+      validationError.description = "Description is required"
+    } 
+    if(!price.trim()){
+      validationError.price = "Price is required"
+    } 
 
-    localStorage.setItem(`${loggedUser.email}`, JSON.stringify(UpdatedUser));
-
-
-    // Reseting Form items
+    setErrors(validationError)
     
-    // setNewCart({
-    //     title : '',
-    //     description : '',
-    //     price : ''
-    // })
+    if(Object.keys(validationError).length === 0){
+
+      if (items) setItems([...items, newItem]);
+      else setItems([newItem]);
+  
+      // Reseting Form items
+      setNewItem({
+        id : uuidv4().slice(0,8),
+        title: "",
+        description: "",
+        price: "",
+        quantity : 1
+      });
+
+    }
+
+   
   };
 
-  const handleShowLocalStorage = (e) => {
-    console.log(loggedUser)
-  };
-
-  const handleAddtoCart = (CartItem) => {
-    setAddtocart([...addtocart, CartItem]);
-    // console.log(CartItem);
-  };
-
-
-  const handleDeletetoCart = (itemTitle) => {
-    console.log("item deleted", itemTitle);
-
-    const filteredcart = cart.filter((item) => {
-      return item.title !== itemTitle;
-    })
-    setCart(filteredcart);
-
-    // const filteredLoggedUser = 
-    // console.log(loggedUser.cartItems)
-    
-
-    // const cartItems = testcart.carItems;
-    // setTestCart({ ...testcart, cartItems: filteredcart });
-    
-    // localStorage.setItem(`${loggedUser.email}`, JSON.stringify(testcart));
-
-
-    setUpdatedUser({...UpdatedUser, cartItems : filteredcart })
-
-    localStorage.setItem(`${loggedUser.email}`, JSON.stringify(UpdatedUser));
-    
+  const handleDeleteItem = (itemId) => {
+    const filteredItems = items.filter((item) => {
+      return item.id !== itemId;
+    });
+    setItems(filteredItems);
   };
 
   return (
     <>
-      <div>
+      {/* Conditional Add item box  */}
+
+      {loggedUser.role === "Admin" && (
         <div className="flex-container-1">
           <div>
             <Typography variant="h4">Additems</Typography>
@@ -111,8 +126,9 @@ const Additems = ({ loggedUser }) => {
                   type="text"
                   name="title"
                   onChange={handleChange}
-                  value={newCart.title}
+                  value={newItem.title}
                 />
+                {errors.title && <span className="errors">{errors.title}</span>}
               </div>
 
               <div>
@@ -123,8 +139,9 @@ const Additems = ({ loggedUser }) => {
                   type="text"
                   name="description"
                   onChange={handleChange}
-                  value={newCart.description}
+                  value={newItem.description}
                 />
+                {errors.description && <span className="errors">{errors.description}</span>}
               </div>
 
               <div>
@@ -135,12 +152,14 @@ const Additems = ({ loggedUser }) => {
                   type="number"
                   name="price"
                   onChange={handleChange}
-                  value={newCart.price}
+                  value={newItem.price}
                 />
+                {errors.price && <span className="errors">{errors.price}</span>}
               </div>
 
               <div>
                 <Button
+                  color="error"
                   className="formItems"
                   type="submit"
                   variant="contained"
@@ -149,33 +168,31 @@ const Additems = ({ loggedUser }) => {
                   Add item
                 </Button>
               </div>
-
-              <div>
-                <Button color="error" variant="outlined" onClick={handleShowLocalStorage}>
-                  Show Local Storage
-                </Button>
-              </div>
             </FormControl>
           </div>
         </div>
-      </div>
-      <div>
+      )}
+
+      <div className="items-list-heading">
         <Typography variant="h4">Items List</Typography>
       </div>
 
-      <div className="itemsContainer">
-        {cart.map((item, key) => {
-          return (
-            <div key={key}>
-              <ItemsCard
-                handleDeletetoCart={handleDeletetoCart}
-                handleAddtoCart={handleAddtoCart}
-                cart={item}
-              />
-            </div>
-          );
-        })}
-      </div>
+      {
+        <div className="itemsContainer">
+          {items?.map((item, key) => {
+            return (
+              <div key={key}>
+                <ItemsCard
+                  loggedUser={loggedUser}
+                  handleDeleteItem={handleDeleteItem}
+                  handleAddtoCart={handleAddtoCart}
+                  item={item}
+                />
+              </div>
+            );
+          })}
+        </div>
+      }
     </>
   );
 };

@@ -2,24 +2,22 @@ import React, { useState } from "react";
 import {
   Button,
   FormControl,
-  FormControlLabel,
   TextField,
   Typography,
 } from "@mui/material";
 import "../Styles/UserPage.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import treeimage from '../assets/lone-tree.jpg'
+import { useLocation} from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 
 
 
 const UserPage = () => {
-  const navigate = useNavigate();
+
   const location = useLocation();
 
   const loggedUser = location.state.loggedUser;
 
-  // console.log(loggedUser)
 
   const [editUser, setEditUser] = useState(loggedUser);
   const [ischange, setIschange] = useState(false);
@@ -33,39 +31,56 @@ const UserPage = () => {
     console.log(name, value);
   };
 
-  const handleSubmit = () => {
-    if (ischange) {
-      const newUser = localStorage.setItem(
-        `${editUser.email}`,
-        JSON.stringify(editUser)
-      );
-      console.log("Value was changed");
-    } else {
-      console.log("Value was not changed");
-    }
-  };
+  const [errors, setErrors] = useState({})
 
-  const handleStorage = () => {
-    console.log(JSON.parse(localStorage.getItem(`${editUser.email}`)));
+
+  const handleSubmit = () => {
+
+    const {fname, lname, password}= editUser
+
+    const validationError = {}
+
+    if(!fname.trim()){
+      validationError.fname = "First name cannot be Empty!"
+    }
+    if(!lname.trim()){
+      validationError.lname = "Last name cannot be Empty!"
+    }
+    if(!password.trim()){
+      validationError.password = "Password cannot be Empty!"
+    } else if(password.length < 6){
+      validationError.password = "Password should be greater than 6 char"
+    }
+
+    setErrors(validationError)
+
+    if(Object.keys(validationError).length === 0){
+      if (ischange) {
+        localStorage.setItem(`${editUser.email}`,JSON.stringify(editUser)
+        );
+        console.log("Value was changed");
+      } else {
+        console.log("Value was not changed");
+      }
+    }
+
+    
   };
 
   return (
     <>
-
+    <Navbar loggedUser={loggedUser}/>
     <div className="main-container">
 
       <div className="sub-1">
-      
-        <Button  variant="outlined" onClick={() => navigate(-1)}>
-          Back
-        </Button>
-
-        <img className="treeimagecontainer" src={treeimage} alt="" />
       
       </div>
 
       
         <div className="sub-2">
+          <div>
+          <Typography variant="h2" >Profile</Typography>
+          </div>
           <FormControl>
             <div>
               <TextField
@@ -77,6 +92,7 @@ const UserPage = () => {
                 onChange={handleChange}
                 value={editUser.fname}
               />
+              {errors.fname && <span className="errors">{errors.fname}</span>}
             </div>
 
             <div>
@@ -89,17 +105,30 @@ const UserPage = () => {
                 onChange={handleChange}
                 value={editUser.lname}
               />
+              {errors.lname && <span className="errors">{errors.lname}</span>}
             </div>
 
             <div>
               <TextField
+                disabled
                 className="formItems"
                 variant="outlined"
                 label="Email"
                 type="text"
                 name="email"
-                onChange={handleChange}
                 value={editUser.email}
+              />
+            </div>
+
+            <div>
+              <TextField
+                disabled
+                className="formItems"
+                variant="outlined"
+                label="Role"
+                type="text"
+                name="role"
+                value={editUser.role}
               />
             </div>
 
@@ -113,10 +142,12 @@ const UserPage = () => {
                 onChange={handleChange}
                 value={editUser.password}
               />
+              {errors.password && <span className="errors">{errors.password}</span>}
             </div>
 
             <div>
               <Button
+                color="success"
                 className="formItems"
                 size="large"
                 type="submit"
@@ -124,12 +155,6 @@ const UserPage = () => {
                 onClick={handleSubmit}
               >
                 Submit
-              </Button>
-            </div>
-
-            <div>
-              <Button color="error" variant="outlined" onClick={handleStorage}>
-                Get local storage DATA
               </Button>
             </div>
           </FormControl>

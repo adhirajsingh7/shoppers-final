@@ -2,13 +2,14 @@
     display: flex;
     justify-content: center;
     margin-top: 50px;
+    flex-direction: column;
     
 }
 
 .flex-container-1 > div {
   margin: 5px;
   text-align: center;
-  line-height: 75px;
+  /* line-height: 75px; */
 }
 
 
@@ -27,4 +28,8 @@
     
     margin: 10px;
     text-align: center;
+  }
+
+  .items-list-heading {
+    margin-left: 20px;
   }

@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Formvalidation } from "../utility/Formvalidation";
-import Login from "./Login";
 import '../Styles/Signup.css'
 import { Button, Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
-
-import SignupImage from '../assets/SignupImage.jpg'
-
+import signupImage from '../assets/undraw-coffee-2.svg'
+import signupImage2 from '../assets/undraw_completed.svg'
 
 const Signup = () => {
 
@@ -17,28 +14,51 @@ const Signup = () => {
     password: "",
     role: "",
     cartItems : [],
-    cartAddedItems : []
   });
 
-  const [tempEmail, setTempEmail] = useState();
-
+  const [errors, setErrors]=useState({})
 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     
     setUserData({ ...userData, [name]: value });
-
-    console.log(name ,value)
-    // console.log(e.target.value);
   };
+  
 
+  //Submit Form and checking Validations
   const handleSubmit = (e) => {
 
-    e.preventDefault();
-    if(Formvalidation(userData)){
-      console.log(userData);
-      setTempEmail(userData.email)
+  e.preventDefault();
+
+  const {fname,lname,email,password} = userData
+
+  const validationError = {};
+  
+  if(!fname.trim()){
+    validationError.fname = "First Name is required"
+  }
+
+  if(!lname.trim()){
+    validationError.lname = "Last name is required"
+  }
+
+  if(!email.trim()){
+    validationError.email = "Email is required"
+  } 
+  // else if(!/\S+@\S\.\S+/.test(email)){
+  //   validationError.email = "Email is not valid"
+  // }
+
+  if(!password.trim()){
+    validationError.password = "Password is required"
+  } else if(password.length < 6){
+    validationError.password = "Password should be atleast 6 char"
+  }
+
+  setErrors(validationError)
+
+  if(Object.keys(validationError).length === 0){
       setUserData({
         fname: "",
         lname: "",
@@ -46,7 +66,6 @@ const Signup = () => {
         password: "",
         role: "",
         cartItems : [],
-        cartAddedItems : []
       })
 
       localStorage.setItem(`${userData.email}`, JSON.stringify(userData));
@@ -54,27 +73,21 @@ const Signup = () => {
     
   };
 
-  const handleStorage = () => {
-    const newData = JSON.parse(localStorage.getItem(`${userData.email}`));
-    console.log(newData);
-  };
-
-  const handleDeleteStorage =()=>{
-    localStorage.clear()
-  }
-
   return (
     <>
-      <div className="flex-container">
+      <div className="signup-main-container">
 
-      <div className="ImageContainer">
-          <img className="loginImage" src={SignupImage} alt="" />
+      <div className="signup-sub-1">
+          <img className="signupImage" src={signupImage} alt="" />
+          <img src={signupImage2} alt="" />
         </div>
 
-        <div>
+        <div className="signup-sub-2">
+      <Typography variant="h2">Register</Typography>
+
         <FormControl>
-          <div>
-          <TextField className="formItems"
+          <div className="signup-inputfield">
+          <TextField className="textfield"
             variant="outlined"
             label="First name"
             type="text"
@@ -82,10 +95,12 @@ const Signup = () => {
             onChange={handleChange}
             value={userData.fname}
           />
+          {errors.fname && <span className="errors">{errors.fname}</span>}
           </div>
+          
 
-          <div>
-          <TextField className="formItems"
+          <div className="signup-inputfield">
+          <TextField className="textfield"
             variant="outlined"
             label="Last name"
             type="text"
@@ -93,10 +108,11 @@ const Signup = () => {
             onChange={handleChange}
             value={userData.lname}
           />
+          {errors.lname && <span className="errors">{errors.lname}</span>}
           </div>
           
-          <div>
-          <TextField className="formItems"
+          <div className="signup-inputfield">
+          <TextField className="textfield"
             variant="outlined"
             label="Email"
             type="text"
@@ -104,10 +120,11 @@ const Signup = () => {
             onChange={handleChange}
             value={userData.email}
           />
+          {errors.email && <span className="errors">{errors.email}</span>}
           </div>
           
-          <div>
-          <TextField className="formItems"
+          <div className="signup-inputfield">
+          <TextField className="textfield"
             variant="outlined"
             label="Password"
             type="password"
@@ -115,9 +132,10 @@ const Signup = () => {
             onChange={handleChange}
             value={userData.password}
           />
+          {errors.password && <span className="errors">{errors.password}</span>}
           </div>
 
-          <div>
+          <div >
           <FormLabel id="role">Role</FormLabel>
 
           <RadioGroup
@@ -126,14 +144,11 @@ const Signup = () => {
           name="role"
         >
         <FormControlLabel value="Admin" control={<Radio name="role" onChange={handleChange}  />} label="Admin" />
-        <FormControlLabel value="Vendor" control={<Radio name="role" onChange={handleChange} />} label="Vendor" />
         <FormControlLabel value="Customer" control={<Radio name="role" onChange={handleChange} />} label="Customer" />
       </RadioGroup>
       </div>
 
-         
-
-          <div>
+          <div className="signup-inputfield">
             <FormControlLabel 
               control={<Checkbox name="terms" id="terms"/>}
               label="I agree with Terms of service"
@@ -141,25 +156,16 @@ const Signup = () => {
             </div>
 
           <div>
-          <Button className="formItems" size="large" type="submit" variant="contained" onClick={handleSubmit}>Submit</Button>
+          <Button size="large" type="submit" variant="contained" onClick={handleSubmit}>Submit</Button>
           </div>
           
 
-          <div>
+          <div style={{marginTop: '10px'}}>
         <Typography>  Already have an account? <Link to="/login">Sign-in</Link> </Typography>
       </div>
-      <div>
-        <Button color="error" variant="outlined" onClick={handleStorage}>Get local storage DATA</Button>
-      </div>
-      <div>
-        <Button color="error" variant="outlined" onClick={handleDeleteStorage}>Delete Local Storage</Button>
-      </div>
-
-
 
         </FormControl>
         </div>
-
 
       </div>
       

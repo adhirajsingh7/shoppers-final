@@ -8,7 +8,9 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-const ItemsCard = ({ cart, handleAddtoCart, handleDeletetoCart }) => {
+const ItemsCard = ({loggedUser, item, handleAddtoCart, handleDeleteItem }) => {
+
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
@@ -19,23 +21,23 @@ const ItemsCard = ({ cart, handleAddtoCart, handleDeletetoCart }) => {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {cart.title}
+          {item.title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {cart.description}
+          {item.description}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Price {"$"}
-          {cart.price}
+          {item.price}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => handleAddtoCart(cart)}>
+        <Button size="small" onClick={() => handleAddtoCart(item)}>
           Add to Cart
         </Button>
-        <Button size="small" onClick={() => handleDeletetoCart(cart.title)}>
+        {loggedUser.role === 'Admin' && <Button size="small" onClick={() => handleDeleteItem(item.id)}>
           Delete
-        </Button>
+        </Button> }
       </CardActions>
     </Card>
   );
