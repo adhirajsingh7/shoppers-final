@@ -19,6 +19,28 @@ const UserPage = () => {
   const loggedUser = location.state.loggedUser;
 
 
+  const imageUpload = (e) => {
+    const file = e.target.files[0];
+    getBase64(file).then(base64 => {
+      localStorage["fileBase64"] = base64;
+      console.debug("file stored",base64);
+    });
+    window.location.reload();
+};
+
+const getBase64 = (file) => {
+  return new Promise((resolve,reject) => {
+     const reader = new FileReader();
+     reader.onload = () => resolve(reader.result);
+     reader.onerror = error => reject(error);
+     reader.readAsDataURL(file);
+  });
+}
+
+
+
+
+
   const [editUser, setEditUser] = useState(loggedUser);
   const [ischange, setIschange] = useState(false);
 
@@ -73,7 +95,20 @@ const UserPage = () => {
     <div className="main-container">
 
       <div className="sub-1">
-      
+        <div className="Userimage-heading">
+          <Typography variant="h1">Profile pic</Typography>
+        </div>
+        <div className="Userimage-container">
+        
+        <img className="Userimage" src={localStorage.getItem('fileBase64')} alt="No image" />
+        </div>
+        <div>
+            <input type="file"  id="imageFile" name='imageFile'  onChange={imageUpload} />
+
+            </div>
+            
+            
+        
       </div>
 
       
@@ -144,6 +179,7 @@ const UserPage = () => {
               />
               {errors.password && <span className="errors">{errors.password}</span>}
             </div>
+
 
             <div>
               <Button

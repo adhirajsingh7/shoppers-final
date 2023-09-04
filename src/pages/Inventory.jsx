@@ -14,6 +14,7 @@ const Inventory = () => {
   const [cart, setCart] = useState(loggedUser.cartItems);
   const [cartSize, setCartSize] = useState(loggedUser.cartItems.length)
 
+  
 
   const handleDelete = (itemId) => {
     const filteredCart = cart.filter((item, key) => {

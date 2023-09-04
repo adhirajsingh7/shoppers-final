@@ -14,13 +14,29 @@ body::-webkit-scrollbar{
 }
 
 .sub-1 {
+    
+    /* background-image: url('../assets/wooden-image.jpg'); */
+    /* background-size: cover; */
+
+    display: flex;
     width: 50%;
-    background-image: url('../assets/wooden-image.jpg');
-    background-size: cover;
+    height: 75vh;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 300px;
+}
+
+
+
+.Userimage {
+    border-radius: 50%;
+    height: 400px;
+    width: 400px;
 }
 
 .sub-2 {
     display: flex;
+    
     justify-content: center;
     align-items: center;
     width: 50%;

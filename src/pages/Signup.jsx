@@ -140,6 +140,7 @@ const Signup = () => {
 
           <RadioGroup
           row
+          defaultValue="Admin"
           aria-labelledby="role"
           name="role"
         >
