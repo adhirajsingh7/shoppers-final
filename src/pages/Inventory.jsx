@@ -8,11 +8,11 @@ import Navbar from "../components/Navbar";
 const Inventory = () => {
   const location = useLocation();
 
-  const loggedUserEmail = location.state.loggedUser.email;
-  const loggedUser = JSON.parse(localStorage.getItem(loggedUserEmail));
+  const userCart = location.state.loggedUser.id
+  const cartItems = JSON.parse(localStorage.getItem(userCart));
 
-  const [cart, setCart] = useState(loggedUser.cartItems);
-  const [cartSize, setCartSize] = useState(loggedUser.cartItems.length)
+  const [cart, setCart] = useState(cartItems);
+ 
 
   
 
@@ -21,24 +21,52 @@ const Inventory = () => {
       return item.id !== itemId;
     });
     setCart(filteredCart);
-    setCartSize(filteredCart.length)
   };
 
+  const handleIncrement =(item)=>{
+    // console.log(item.quantity);
+    const newCart = cart.map((ele)=>{
+      return ele.id === item.id ? {...ele, 'quantity': ele.quantity + 1} : {...ele}
+    })
+    setCart(newCart)
+  }
+
+  const handleDecrement=(item)=>{
+    // console.log(item.quantity);
+    const itemQuantity = item.quantity
+      if(itemQuantity !== 1){
+       
+        const newCartItems = cart.map((ele)=>{
+          return (
+            ele.id === item.id ? {...ele, 'quantity': Math.max(ele.quantity - 1,1)} : {...ele}
+          )
+        })
+        setCart(newCartItems)
+
+      }
+      else {
+        const filteredCart = cart.filter((ele)=>
+          ele.id !== item.id
+        )
+        setCart(filteredCart)
+      }
+  }
+
   useEffect(() => {
-    const updatedUser = { ...loggedUser, cartItems: cart };
-    localStorage.setItem(`${loggedUser.email}`, JSON.stringify(updatedUser));
+    // const updatedUser = { ...loggedUser, cartItems: cart };
+    localStorage.setItem(`${userCart}`, JSON.stringify(cart));
   }, [cart]);
 
   return (
     <>
-    <Navbar loggedUser = {loggedUser}/>
-      <Typography variant="h1">Cart Items - {cartSize}</Typography>
+    <Navbar loggedUser = {location.state.loggedUser}/>
+      <Typography variant="h1">Cart Items</Typography>
       <div className="flex-container-1"></div>
       <div className="itemsContainer">
-        {cart.map((item, key) => {
+        {cart?.map((item, key) => {
           return (
             <div key={key}>
-              <ItemsCard2 handleDelete={handleDelete} item={item} />
+              <ItemsCard2 handleDecrement={handleDecrement} handleIncrement={handleIncrement} handleDelete={handleDelete} item={item} />
             </div>
           );
         })}

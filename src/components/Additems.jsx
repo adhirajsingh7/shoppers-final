@@ -7,6 +7,8 @@ import "../Styles/Additems.css";
 
 const Additems = ({ loggedUser }) => {
 
+  
+
 
   //ItemsList
   const [items, setItems] = useState(
@@ -20,25 +22,40 @@ const Additems = ({ loggedUser }) => {
 
   //Cart Items
 
-  const userCart = loggedUser.cartItems;
+  const userCart = JSON.parse(localStorage.getItem(`${loggedUser.id}`))
   const [cartItems, setCartItems] = useState(userCart);
 
 
   const handleAddtoCart = (item) => {
 
-
     if (cartItems)
     {
-      setCartItems([...cartItems, item]);
+      const found = cartItems.findIndex((ele)=>ele.id === item.id)
+      if(found != -1){
+       
+        const newCartItems = cartItems.map((ele)=>{
+          return (
+            ele.id === item.id ? {...ele, 'quantity': ele.quantity + 1} : {...ele}
+          )
+        })
+        setCartItems(newCartItems)
+
+
+      }else {
+        setCartItems([...cartItems, item]);
+      }
+
+      // setCartItems([...cartItems, item]);
     } 
     else {
-      setCartItems(item);
+      setCartItems([item]);
     }
   };
 
   useEffect(() => {
-    const UpdatedUser = { ...loggedUser, cartItems: cartItems };
-    localStorage.setItem(`${loggedUser.email}`, JSON.stringify(UpdatedUser));
+    // const UpdatedUser = { ...loggedUser, cartItems: cartItems };
+    
+    localStorage.setItem(`${loggedUser.id}`, JSON.stringify(cartItems));
   }, [cartItems]);
 
   //Add item to Displaying ItemsList

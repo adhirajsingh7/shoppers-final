@@ -4,16 +4,17 @@ import '../Styles/Signup.css'
 import { Button, Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import signupImage from '../assets/undraw-coffee-2.svg'
 import signupImage2 from '../assets/undraw_completed.svg'
+import { v4 as uuidv4 } from 'uuid';
 
 const Signup = () => {
 
   const [userData, setUserData] = useState({
+    id: uuidv4().slice(0,8),
     fname: "",
     lname: "",
     email: "",
     password: "",
     role: "",
-    cartItems : [],
   });
 
   const [errors, setErrors]=useState({})

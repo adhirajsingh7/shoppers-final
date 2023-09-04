@@ -19,13 +19,16 @@ const UserPage = () => {
   const loggedUser = location.state.loggedUser;
 
 
+
+  const [profileimage, setProfileImage] = useState(localStorage.getItem('fileBase64'))
+
   const imageUpload = (e) => {
     const file = e.target.files[0];
     getBase64(file).then(base64 => {
-      localStorage["fileBase64"] = base64;
+      setProfileImage(localStorage["fileBase64"] = base64)
       console.debug("file stored",base64);
     });
-    window.location.reload();
+    // window.location.reload();
 };
 
 const getBase64 = (file) => {
@@ -33,7 +36,7 @@ const getBase64 = (file) => {
      const reader = new FileReader();
      reader.onload = () => resolve(reader.result);
      reader.onerror = error => reject(error);
-     reader.readAsDataURL(file);
+     reader?.readAsDataURL(file);
   });
 }
 
@@ -100,7 +103,7 @@ const getBase64 = (file) => {
         </div>
         <div className="Userimage-container">
         
-        <img className="Userimage" src={localStorage.getItem('fileBase64')} alt="No image" />
+        <img className="Userimage" src={profileimage} alt="No image" />
         </div>
         <div>
             <input type="file"  id="imageFile" name='imageFile'  onChange={imageUpload} />
